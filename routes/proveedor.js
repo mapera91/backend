@@ -15,13 +15,28 @@ app.get('/',(req,res,next)=> {
                 errores:err
             })
         }
-        res.status(200).json(proveedores)
-        // res.status(200).json({
-        //     ok:true,
-        //     proveedores:proveedores
-        // })
+        res.status(200).json({
+            ok:true,
+            proveedores:proveedores
+        })
     });
 
+});
+
+app.get('/:id',function(req,res,next) {
+    Proveedor.findById(req.params.id,(err, proveedor)=> {
+        if(err) {
+            return resizeBy.status(500).json({
+                ok: false,
+                mensaje: 'Error en el acceso a la DB',
+                errores: err
+            })
+        }
+        res.status(200).json({
+            ok: true,
+            proveedor: proveedor
+        })
+    })
 });
 
 app.post('/',(req,res)=> {
