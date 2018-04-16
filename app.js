@@ -2,6 +2,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 var proveedor = require('./routes/proveedor');
+var factura = require('./routes/factura');
+var usuario = require('./routes/usuario');
 
 var app = express();
 
@@ -23,6 +25,8 @@ app.use(bodyParser.json({}));
 app.use(bodyParser.urlencoded({'extended':false}));
 
 app.use('/proveedor',proveedor);
+app.use('/factura',factura);
+app.use('/usuario',usuario);
 
 app.listen(3000,function() {
     console.log('Servidor OK en puerto 3000')
