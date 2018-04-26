@@ -1,13 +1,13 @@
 var express = require('express');
 var mongoose = require('mongoose');
 
-var Factura = require('../models/factura');
+var Presupuesto = require('../models/presupuesto');
 
 var app = express();
 
 app.get('/',(req,res,next)=> {
     
-    Factura.find({}).exec((err,factura)=> {
+    Presupuesto.find({}).exec((err,presupuesto)=> {
         if(err) {
             return res.status(500).json({
                 ok:false,
@@ -17,14 +17,14 @@ app.get('/',(req,res,next)=> {
         }
         res.status(200).json({
             ok:true,
-            factura:factura
+            presupuesto:presupuesto
         })
     });
 
 });
 
 app.get('/:id',function(req,res,next) {
-    Factura.findById(req.params.id,(err, factura)=> {
+    Presupuesto.findById(req.params.id,(err, presupuesto)=> {
         if(err) {
             return res.status(500).json({
                 ok: false,
@@ -34,7 +34,7 @@ app.get('/:id',function(req,res,next) {
         }
         res.status(200).json({
             ok: true,
-            factura: factura
+            presupuesto: presupuesto
         })
     })
 });
@@ -43,7 +43,7 @@ app.post('/',(req,res)=> {
 
     var body = req.body;
 
-    var factura = new Factura({
+    var presupuesto = new Presupuesto({
         proveedor: body.proveedor,
         cif: body.cif,
         fecha: body.fecha,
@@ -56,17 +56,17 @@ app.post('/',(req,res)=> {
         total: body.total
     });
 
-    factura.save((err,facturaGuardado)=> {
+    presupuesto.save((err,presupuestoGuardado)=> {
         if(err) {
             return res.status(400).json({
                 ok:false,
-                mensaje:'Error al crear la factura',
+                mensaje:'Error al crear el presupuesto',
                 errores:err
             });
         }
         res.status(200).json({
             ok:true,
-            factura:facturaGuardado
+            presupuesto:presupuestoGuardado
         })
     });
 
@@ -74,20 +74,20 @@ app.post('/',(req,res)=> {
 
 app.put('/:id',function(req,res,next) {
 
-    Factura.findByIdAndUpdate(req.params.id,req.body,function(err,datos) {  //Busca un documento por su ID y lo actualiza
+    Presupuesto.findByIdAndUpdate(req.params.id,req.body,function(err,datos) {  //Busca un documento por su ID y lo actualiza
         if(err) return next(err);
         res.status(201).json({
             ok: 'true',
-            mensaje: 'Factura actualizada'
+            mensaje: 'Presupuesto actualizado'
         });
     });    
 });
 
 app.delete('/:id',function(req,res,next) {
 
-    Factura.findByIdAndRemove(req.params.id,function(err,datos) {    //Busca un documento por su ID y lo elimina
+    Presupuesto.findByIdAndRemove(req.params.id,function(err,datos) {    //Busca un documento por su ID y lo elimina
         if(err) return next(err);
-        var mensaje = 'La factura de ' + datos.proveedor + ' eliminada';
+        var mensaje = 'El presupuesto de ' + datos.proveedor + ' eliminado';
         res.status(200).json({
             ok: 'true',
             mensaje: mensaje

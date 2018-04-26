@@ -1,17 +1,13 @@
 var express = require('express');
 var mongoose = require('mongoose');
 
-var Proveedor = require('../models/proveedor');
-var autentoken = require('../middleware/autentoken');
+var Cliente = require('../models/cliente');
 
 var app = express();
 
 app.get('/',(req,res,next)=> {
     
-    var desde = req.query.desde;
-    desde = Number(desde);
-
-    Proveedor.find({}).skip(desde).limit(5).exec((err,proveedores)=> {
+    Cliente.find({}).exec((err,clientes)=> {
         if(err) {
             return res.status(500).json({
                 ok:false,
@@ -19,20 +15,16 @@ app.get('/',(req,res,next)=> {
                 errores:err
             })
         }
-
-        Proveedor.count({},(err,total)=> {
-            res.status(200).json({
-                ok:true,
-                proveedores:proveedores,
-                total:total
-            })
+        res.status(200).json({
+            ok:true,
+            clientes:clientes
         })
     });
 
 });
 
 app.get('/:id',function(req,res,next) {
-    Proveedor.findById(req.params.id,(err, proveedor)=> {
+    Cliente.findById(req.params.id,(err, cliente)=> {
         if(err) {
             return res.status(500).json({
                 ok: false,
@@ -42,16 +34,16 @@ app.get('/:id',function(req,res,next) {
         }
         res.status(200).json({
             ok: true,
-            proveedor: proveedor
+            cliente: cliente
         })
     })
 });
 
-app.post('/',(req,res,next)=> {
+app.post('/',(req,res)=> {
 
     var body = req.body;
 
-    var proveedor = new Proveedor({
+    var cliente = new Cliente({
         nombre: body.nombre,
         cif: body.cif,
         domicilio: body.domicilio,
@@ -63,17 +55,17 @@ app.post('/',(req,res,next)=> {
         contacto: body.contacto
     });
 
-    proveedor.save((err,proveedorGuardado)=> {
+    cliente.save((err,clienteGuardado)=> {
         if(err) {
             return res.status(400).json({
                 ok:false,
-                mensaje:'Error al crear el proveedor',
+                mensaje:'Error al crear el cliente',
                 errores:err
             });
         }
         res.status(200).json({
             ok:true,
-            proveedor:proveedorGuardado
+            cliente:clienteGuardado
         })
     });
 
@@ -81,20 +73,20 @@ app.post('/',(req,res,next)=> {
 
 app.put('/:id',function(req,res,next) {
 
-    Proveedor.findByIdAndUpdate(req.params.id,req.body,function(err,datos) {  //Busca un documento por su ID y lo actualiza
+    Cliente.findByIdAndUpdate(req.params.id,req.body,function(err,datos) {  //Busca un documento por su ID y lo actualiza
         if(err) return next(err);
         res.status(201).json({
             ok: 'true',
-            mensaje: 'Proveedor actualizado'
+            mensaje: 'Cliente actualizado'
         });
     });    
 });
 
-app.delete('/:id',autentoken.verificarToken,function(req,res,error) {
+app.delete('/:id',function(req,res,next) {
 
-    Proveedor.findByIdAndRemove(req.params.id,function(err,datos) {    //Busca un documento por su ID y lo elimina
+    Cliente.findByIdAndRemove(req.params.id,function(err,datos) {    //Busca un documento por su ID y lo elimina
         if(err) return next(err);
-        var mensaje = 'El proveedor ' + datos.nombre + ' ha sido eliminado';
+        var mensaje = 'Cliente ' + datos.nombre + ' eliminado';
         res.status(200).json({
             ok: 'true',
             mensaje: mensaje
