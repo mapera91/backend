@@ -4,7 +4,8 @@ var unique = require('mongoose-unique-validator');
 var SesionSchema = new mongoose.Schema({
     nombre:String,
     fechaLogin:Date,
-    fechaLogout:Date
+    fechaLogout:Date,
+    duracion:String
 })
 
 SesionSchema.plugin(unique);
