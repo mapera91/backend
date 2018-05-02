@@ -5,9 +5,11 @@ var Cliente = require('../models/cliente');
 
 var app = express();
 
-app.get('/',(req,res,next)=> {
+app.get('/:nombre',(req,res,next)=> {
+
+    var nombre = req.params.nombre;
     
-    Cliente.find({}).exec((err,clientes)=> {
+    Cliente.find({nombre:{$regex:nombre,$options:'i'}}).exec((err,clientes)=> {
         if(err) {
             return res.status(500).json({
                 ok:false,
