@@ -5,6 +5,24 @@ var Cliente = require('../models/cliente');
 
 var app = express();
 
+app.get('/',(req,res,next)=> {
+   
+    Cliente.find({}).exec((err,clientes)=> {
+        if(err) {
+            return res.status(500).json({
+                ok:false,
+                mensaje:'Error de acceso a DB',
+                errores:err
+            })
+        }
+        res.status(200).json({
+            ok:true,
+            clientes:clientes
+        })
+    });
+
+});
+
 app.get('/nombre/:nombre',(req,res,next)=> {
 
     var nombre = req.params.nombre;
