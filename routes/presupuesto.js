@@ -6,8 +6,9 @@ var Presupuesto = require('../models/presupuesto');
 var app = express();
 
 app.get('/',(req,res,next)=> {
-    
-    Presupuesto.find({}).exec((err,presupuesto)=> {
+
+    //Presupuesto.find({}).sort({numero:1}).exec((err,presupuestos)=> {
+    Presupuesto.find({}).exec((err,presupuestos)=> {
         if(err) {
             return res.status(500).json({
                 ok:false,
@@ -17,7 +18,25 @@ app.get('/',(req,res,next)=> {
         }
         res.status(200).json({
             ok:true,
-            presupuesto:presupuesto
+            presupuestos:presupuestos
+        })
+    });
+
+});
+
+app.get('/cliente',(req,res,next)=> {
+    
+    Presupuesto.aggregate([{$group:{_id:{cliente:"$cliente"},total:{$sum:"$total"}}}]).exec((err,presupuestos)=> {
+        if(err) {
+            return res.status(500).json({
+                ok:false,
+                mensaje:'Error de acceso a DB',
+                errores:err
+            })
+        }
+        res.status(200).json({
+            ok:true,
+            presupuestos:presupuestos
         })
     });
 
@@ -44,16 +63,14 @@ app.post('/',(req,res)=> {
     var body = req.body;
 
     var presupuesto = new Presupuesto({
-        proveedor: body.proveedor,
-        cif: body.cif,
+        cliente: body.cliente,
+        cif:body.cif,
         fecha: body.fecha,
-        concepto: body.concepto,
-        base: body.base,
-        retencion: body.retencion,
+        items: body.items,
+        suma: body.suma,
+        tipo: body.tipo,
         iva: body.iva,
-        irpf: body.irpf,
-        importe: body.importe,
-        total: body.total
+        total: body.total,
     });
 
     presupuesto.save((err,presupuestoGuardado)=> {

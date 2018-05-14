@@ -90,7 +90,8 @@ app.put('/:id',function(req,res,next) {
     });    
 });
 
-app.delete('/:id',autentoken.verificarToken,function(req,res,error) {
+// app.delete('/:id',autentoken.verificarToken,function(req,res,error) {    -> Eliminacion de un proveedor con autenticacion de token
+app.delete('/:id',function(req,res,error) {     //Eliminamos el token para la aplicacion IONIC
 
     Proveedor.findByIdAndRemove(req.params.id,function(err,datos) {    //Busca un documento por su ID y lo elimina
         if(err) return next(err);

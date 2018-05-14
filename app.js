@@ -8,12 +8,15 @@ var presupuesto = require('./routes/presupuesto');
 var usuario = require('./routes/usuario');
 var login = require('./routes/login');
 var sesion = require('./routes/sesion');
+var articulo = require('./routes/articulo');
+
 
 var app = express();
 
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
+//mongoose.connect('mongodb://localhost:27101,localhost:27102,localhost:27103/erp?replicaSet=clusterserv',{useMongoClient:true,promiseLibrary:require('bluebird')}).then(()=> {
 mongoose.connect('mongodb://localhost:27017/erp',{promiseLibrary:require('bluebird')}).then(()=> {
     console.log('Conectado a la DB')}).catch(()=> {
         console.error(err)})
@@ -35,6 +38,7 @@ app.use('/presupuesto',presupuesto);
 app.use('/usuario',usuario);
 app.use('/login',login);
 app.use('/sesion',sesion);
+app.use('/articulo',articulo);
 
 app.listen(3000,function() {
     console.log('Servidor OK en puerto 3000')
